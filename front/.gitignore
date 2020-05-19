@@ -1,0 +1,15 @@
+*.iml
+.vscode/
+.DS_Store
+*.pyc
+__pycache__/
+*.egg-info
+*.swp
+.idea
+
+dist/
+node_modules/
+test.js
+gen
+pages/Test.vue
+package-lock.json
