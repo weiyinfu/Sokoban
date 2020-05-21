@@ -19,6 +19,25 @@ module.exports = {
       if (answer) return `最佳答案${answer.length}步`
       else return '等你解决'
     },
+    getDirection(angle) {
+      if (angle < 0) {
+        angle = 360 + angle;
+      }
+      angle = 360 - angle;
+      const directions = [[0, 'right'], [90, 'up'], [180, 'left'], [270, 'down']];
+      let minDelta = 10000;
+      let minIndex = 0;
+      for (let i = 0; i < directions.length; i++) {
+        const [ang, direction] = directions[i];
+        let delta = Math.abs(ang - angle)
+        if (delta > 180) delta = 360 - delta;
+        if (delta < minDelta) {
+          minIndex = i;
+          minDelta = delta;
+        }
+      }
+      return directions[minIndex][1];
+    },
     copyText(text) {
       let textarea = document.createElement("textarea"); //创建input对象
       let currentFocus = document.activeElement; //当前获得焦点的元素

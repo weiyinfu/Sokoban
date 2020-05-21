@@ -9,4 +9,4 @@ filenames = [i[0] for i in a]
 maps = [i[1] for i in a]
 valid=lib.dedup(filenames, maps)
 print('去重之后',len(valid))
-open('map.txt','w').write("\n\n".join(format.to_psb_string(i) for i in valid))
+open('map.txt','w').write("\n\n".join(format.to_xsb_string(i) for i in valid))

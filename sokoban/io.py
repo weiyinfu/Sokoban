@@ -10,12 +10,12 @@ from sokoban import format
 
 def load_file(filepath: str):
     """
-    加载一个文本文件，里面是若干个psb格式的地图
+    加载一个文本文件，里面是若干个xsb格式的地图
     :param filepath: 加载的文本文件
     :return: 返回（文件描述，llint地图）二元组
     """
     maps = open(filepath).read().strip().split("\n\n")
-    maps = [(f"{filepath}", format.from_psb_string(i)) for ind, i in enumerate(maps)]
+    maps = [(f"{filepath}", format.from_xsb_string(i)) for ind, i in enumerate(maps)]
     return maps
 
 
@@ -35,7 +35,7 @@ def save_file(filepath: str, a: List[List[List[int]]]):
     """
     把地图a保存到文件filepath中
     """
-    s = '\n\n'.join(format.to_psb_string(i) for i in a)
+    s = '\n\n'.join(format.to_xsb_string(i) for i in a)
     open(filepath, 'w').write(s)
 
 

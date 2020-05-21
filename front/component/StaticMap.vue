@@ -17,7 +17,7 @@
     },
     data() {
       const game = new Game();
-      game.loadPsb(this.map);
+      game.loadXsb(this.map);
       return {
         game
       }

@@ -1,9 +1,10 @@
 <template>
   <div class="HeaderPart">
-    <div>
+    <div ref="tabs">
       <router-link to="/"><img src="https://weiyinfu.cn/learnSvg?text=推&background=white&color=purple"></router-link>
       <router-link to="/">题库</router-link>
-      <router-link to="/game/0" target="_blank">游戏</router-link>
+      <router-link to="/add">贡献问题</router-link>
+      <router-link to="/about">关于</router-link>
     </div>
     <div>
       <el-select v-model="skinIndex" placeholder="选择皮肤" @change="changeSkin">
@@ -24,9 +25,18 @@
         skinIndex: 0,
       }
     },
-    watch: {
-      "$store.state.config.skinIndex"() {
-        this.skinIndex = this.$store.state.config.skinIndex;
+    props: {
+      activeTab: {
+        type: String,
+        default: "题库",
+      }
+    },
+    mounted() {
+      this.skinIndex = this.$store.state.config.skinIndex;
+      for (let tab of this.$refs.tabs.children) {
+        if (tab.innerText === this.activeTab) {
+          tab.style.color = 'red';
+        }
       }
     },
     methods: {
@@ -40,9 +50,10 @@
   .HeaderPart {
     display: flex;
     align-items: center;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-    color: rgba(0, 0, 0, 0.65);
     justify-content: space-between;
+    color: rgba(0, 0, 0, 0.65);
+    height: 44px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 
     & > div {
       display: flex;
@@ -70,7 +81,6 @@
         margin: 0 10px;
       }
     }
-
 
   }
 

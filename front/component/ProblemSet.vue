@@ -4,10 +4,9 @@
     <div class="body">
       <div class="total-desc">已解决 {{solvedCount}}/{{maps.length}}</div>
       <el-table :data="maps" :row-class-name="tableRowClassName">
-        <el-table-column
-                label="#">
+        <el-table-column label="#">
           <template slot-scope="scope">
-            <span style="margin-left: 10px">{{scope.$index }}</span>
+            {{scope.$index }}
           </template>
         </el-table-column>
         <el-table-column label="地图">
@@ -34,13 +33,13 @@
   export default {
     components: {StaticMap, HeaderPart},
     mixins: [GameMixin],
-    data() {
-      return {}
-    },
     computed: {
       solvedCount() {
         return this.$store.state.maps.filter(map => map.answer).length
       },
+    },
+    activated() {
+      document.title = "推箱子-题库"
     },
     methods: {
       tableRowClassName({row, rowIndex}) {
@@ -55,11 +54,6 @@
     height: 100%;
     padding: 0;
     margin: 0;
-    @header-height: 44px;
-
-    .HeaderPart {
-      height: @header-height;
-    }
 
     .body {
       padding: 20px;
@@ -67,10 +61,12 @@
     }
 
     .solved {
+      //已解决的问题的背景色
       background: #d9f0d9;
     }
 
     .total-desc {
+      //已解决/未解决 标签
       border-radius: 10px;
       background: #337ab7;
       display: inline-block;
@@ -80,8 +76,13 @@
     }
 
     .map-link {
+      //地图超链接
       cursor: pointer;
       display: block;
+    }
+
+    .el-table--enable-row-hover .el-table__body tr:hover > td {
+      background: unset;
     }
   }
 </style>

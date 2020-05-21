@@ -1,5 +1,5 @@
 //x,y,value三元组，用于记录操作历史
-import {BOX, BOX_SLOT, getMan, isOneOf, isOver, legal, loadPsbString, MAN, SLOT, SPACE} from "./lib";
+import {BOX, BOX_SLOT, getMan, isOneOf, isOver, legal, loadXsbString, MAN, SLOT, SPACE} from "./lib";
 
 type PositionValue = [number, number, number];
 
@@ -89,10 +89,10 @@ export class Game {
     this.history.pop(this.curMap);
   }
 
-  loadPsb(psbString: string) {
+  loadXsb(xsbString: string) {
     this.history.clear();
-    this.curMap = loadPsbString(psbString);
-    this.question = psbString;
+    this.curMap = loadXsbString(xsbString);
+    this.question = xsbString;
   }
 
   isOver() {

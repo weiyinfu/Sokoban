@@ -5,8 +5,8 @@ from fu import json
 
 qa = json.load("../ans.json")
 for k,v in qa.items():
-    assert lib.check_right(format.from_psb_string(k),v)
-a = [format.from_psb_string(i) for i in qa]
+    assert lib.check_right(format.from_xsb_string(k),v)
+a = [format.from_xsb_string(i) for i in qa]
 print('去重之前', len(a))
 for ma in a:
     lib.validate(ma)
@@ -15,8 +15,8 @@ print('去重之后', len(valid))
 
 ans_map = {}
 for i in qa:
-    k = format.to_psb_string(lib.regularize(format.from_psb_string(i),do_strip=True))
-    v = lib.try_op(format.from_psb_string(k), qa[i])
+    k = format.to_xsb_string(lib.regularize(format.from_xsb_string(i)))
+    v = lib.try_op(format.from_xsb_string(k), qa[i])
     if not v:
         assert False
     if k in ans_map:
@@ -24,6 +24,6 @@ for i in qa:
             continue
     ans_map[k] = v
 for k, v in ans_map.items():
-    assert lib.check_right(format.from_psb_string(k), v)
+    assert lib.check_right(format.from_xsb_string(k), v)
 json.dump(ans_map, 'new_ans.json', indent=2)
 print(len(ans_map))

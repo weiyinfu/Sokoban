@@ -9,13 +9,16 @@ export const PSB_STRING = "-.@+$*#";
 export const NAMES = ['space', "slot", 'man', 'man_slot', 'box', 'box_slot', 'wall'];
 export type SokobanMap = number[][];
 
-export function loadPsbString(content: string): Array<Array<number>> {
+export function loadXsbString(content: string): Array<Array<number>> {
   //直接加载一个地图字符串
   return content.trim().split("\n").filter(line => line.trim().length).map(line => Array.from(line).map(x => PSB_STRING.indexOf(x))
   );
 }
 
-export function toPsbString(map: Array<Array<number>>) {
+export function toXsbString(map: Array<Array<number>>) {
+  /**
+   * 把一个int数组转成xsb格式的字符串
+   * */
   let s: string[] = [];
   for (let i of map) {
     s.push(i.map(x => PSB_STRING[x]).join(''))

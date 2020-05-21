@@ -12,7 +12,7 @@ maps = [i[1] for i in maps]
 a: List[db.Question] = []
 snow = snow_flake.SnowFlake()
 for i in maps:
-    q = format.to_psb_string(i)
+    q = format.to_xsb_string(i)
     an = None
     if q in ans:
         an = ans[q]

@@ -2,16 +2,17 @@
 <template>
   <div class="GameView">
     <div class="console">
-      <input type="button" value="上一关" @click="initGame(Math.max(0,curLevel-1),true)">
-      <input type="button" value="下一关" @click="initGame(Math.min(curLevel+1,maps.length-1),true)">
-      <input type="button" value="重玩本关" @click="initGame(curLevel,false)">
-      <input type="button" value="自动演示" @click="doAutoPlay()">
-      <input type="button" value="分享游戏" @click="shareGame()">
-      <div class="desc">{{game.getOpList().length}}/{{answer?answer.length:"无"}}</div>
+      <input type="button" value="上一关(P)" @click="doPrevLevel">
+      <input type="button" value="下一关(N)" @click="doNextLevel()">
+      <input type="button" value="重玩本关(R)" @click="doReset()">
+      <input type="button" value="自动演示(A)"
+             :disabled="!(answer&&answer.length>0)" @click="doAutoPlay()">
+      <input type="button" value="分享游戏(S)" @click="shareGame()">
     </div>
-    <div class="body">
+    <div class="body" @keydown="onKeydown" @click="focusCanvas()">
       <CanvasSokoban ref="canvas" :game="game" @over="onOver"></CanvasSokoban>
     </div>
+    <div class="footer">{{game.getOpList().length}}/{{answer?answer.length:"无"}}</div>
   </div>
 </template>
 <script>
@@ -30,15 +31,15 @@
       };
     },
     computed: {
-      maps() {
-        return this.$store.state.maps;
-      },
       answer() {
         return this.$store.state.maps[this.curLevel].answer;
+      },
+      canvas() {
+        return this.$refs.canvas;
       }
     },
     mounted() {
-      document.body.onresize = () => this.$refs.canvas.drawMap();
+      document.body.onresize = () => this.canvas.drawMap();
       this.focusCanvas();
       window.onpopstate = (event) => {
         const gameIndex = parseInt(this.$route.params.game);
@@ -48,24 +49,56 @@
       this.initGame(gameIndex, false);
     },
     methods: {
+      onKeydown(e) {
+        switch (e.key) {
+          case 'a': {
+            this.doAutoPlay();
+            break;
+          }
+          case 'r': {
+            this.doReset();
+            break;
+          }
+          case 'p': {
+            this.doPrevLevel();
+            break;
+          }
+          case 'n': {
+            this.doNextLevel();
+            break;
+          }
+          case 's': {
+            this.shareGame();
+            break;
+          }
+        }
+      },
+      doPrevLevel() {
+        this.initGame(Math.max(0, this.curLevel - 1), true);
+      },
+      doNextLevel() {
+        this.initGame(Math.min(this.curLevel + 1, this.maps.length - 1), true)
+      },
+      doReset() {
+        this.initGame(this.curLevel, false);
+        this.canvas.stopAutoPlay();
+      },
       shareGame() {
         this.copyText(location.href);
         this.$message("网址已复制到剪贴板");
         this.focusCanvas();
       },
       doAutoPlay() {
-        this.game.loadPsb(this.maps[this.curLevel].question);
-        this.$refs.canvas.drawMap();
-        this.$refs.canvas.autoPlay(this.answer || '')
+        this.game.loadXsb(this.maps[this.curLevel].question);
+        this.canvas.drawMap();
+        this.canvas.autoPlay(this.answer || '')
         this.focusCanvas();
       },
       onOver(qa) {
         this.$nextTick(() => {
           this.$message("恭喜胜利！")
         })
-        axios.get('/api/submit', {
-          params: qa
-        }).then(resp => {
+        axios.post('/api/submit', qa).then(resp => {
           console.log(resp.data)
           this.$message(resp.data);
           if (qa.a.length < this.answer.length) {
@@ -77,7 +110,7 @@
         })
       },
       focusCanvas() {
-        this.$refs.canvas.$el.focus();
+        this.canvas.$el.focus();
       },
       initGame(mapIndex, updateHistory) {
         const title = `【推箱子】第${mapIndex}关`;
@@ -91,8 +124,9 @@
           })
         }
         this.curLevel = mapIndex;
-        this.game.loadPsb(question.question);
-        this.$refs.canvas.drawMap();
+        this.canvas.stopAutoPlay();
+        this.game.loadXsb(question.question);
+        this.canvas.drawMap();
         this.focusCanvas();
       },
     }
@@ -101,21 +135,19 @@
 <style lang="less">
   .GameView {
     @console-height: 50px;
+    @footer-height: 40px;
+    @header-footer-height: @console-height+@footer-height;
 
     .console {
       height: @console-height;
       display: flex;
+      width: 100%;
 
       & > * {
         height: 100%;
         flex: 1;
       }
 
-      .desc {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
 
       align-items: center;
       justify-content: space-between;
@@ -124,9 +156,18 @@
     .body {
       display: flex;
       background: black;
-      height: calc(~"100% - " @console-height);
+      height: calc(~"100% - " @header-footer-height);
       align-items: center;
       justify-content: center;
+    }
+
+    .footer {
+      height: @footer-height;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: antiquewhite;
     }
   }
 </style>

@@ -12,9 +12,9 @@ images = ["space", 'slot', "man", "manSlot", 'box', 'boxSlot', "wall"]
 SPACE, SLOT, MAN, MAN_SLOT, BOX, BOX_SLOT, WALL = list(range(len(images)))
 
 
-def to_psb_string(a: List[List[int]], ground='-'):
+def to_xsb_string(a: List[List[int]], ground='-'):
     """
-    把一个地图转化为psb格式
+    把一个地图转化为xsb格式
     因为ground有争议，此处使用-
     """
     chars = [ground] + list(".@+$*#")
@@ -23,7 +23,7 @@ def to_psb_string(a: List[List[int]], ground='-'):
     return '\n'.join(''.join(map(str, row)) for row in a)
 
 
-def from_psb_string(a: str):
+def from_xsb_string(a: str):
     lines = a.strip().splitlines()
     valid_lines = []
     meet_end = False
@@ -55,13 +55,33 @@ def transform(a: List[List[str]], ma: Dict[str, str]):
     return b
 
 
-def regularize(ma: List[List[int]], do_strip=False):
+def pad(ma: List[List[int]]):
     """
-    规范化一个地图，让小人的位置在它所能在的位置的最上、最左方
+    把一个地图用墙围起来，求出最大行列，然后用空白填充
+    :param ma:
+    :return:
+    """
+    rows, cols = len(ma), max(len(i) for i in ma)
+    ans = [[WALL] * (cols + 2)]
+    for i in ma:
+        ans.append([WALL] + i + [WALL] * (cols + 2 - 1 - len(i)))
+    ans.append([WALL] * (cols + 2))
+    return ans
+
+
+def regularize_xsb_string(s: str):
+    ma = from_xsb_string(s)
+    ma = regularize(ma)
+    return to_xsb_string(ma)
+
+
+def regularize(ma: List[List[int]]):
+    """
+    规范化一个地图
     计算一个地图的哈希值，将一个地图顺时针旋转4次，flip之后再旋转4次，一共得到8种局面，取这8种局面中的最小局面作为局面的正则化值
     """
-    if do_strip:
-        ma = strip(ma)
+    ma = pad(ma)
+    ma = strip(ma)
     # 开始旋转计算最小值
     min_str = None
     best_map = None
@@ -69,7 +89,7 @@ def regularize(ma: List[List[int]], do_strip=False):
         now = a
         for i in range(4):
             now = np.rot90(now)
-            h = to_psb_string(now)
+            h = to_xsb_string(now)
             if not min_str or min_str > h:
                 min_str = h
                 best_map = now
@@ -85,7 +105,7 @@ def get_man_pos(ma: List[List[int]]):
             v = ma[x][y]
             if v == MAN or v == MAN_SLOT:
                 return x, y
-    print(to_psb_string(ma))
+    print(to_xsb_string(ma))
     assert False, "cannot find man"
 
 
@@ -93,7 +113,7 @@ def show(a: List[List[int]]):
     """
     打印一个地图
     """
-    print(to_psb_string(a))
+    print(to_xsb_string(a))
     print('\n')
 
 
@@ -149,7 +169,7 @@ def validate(ma: List[List[int]]):
     3. 有解性如何判定？
     """
     # strip保证了有界性
-    ma = regularize(ma, do_strip=True)
+    ma = regularize(ma)
     # 目标位置的个数与箱子的个数
     a = np.reshape(ma, -1).tolist()
     cnt = Counter(a)
@@ -172,8 +192,8 @@ def dedup(filenames: List[str], maps: List[List[List[int]]]):
     s = {}
     good = []
     for mapIndex, ma in enumerate(maps):
-        ma = regularize(ma, True)
-        k = to_psb_string(ma)
+        ma = regularize(ma)
+        k = to_xsb_string(ma)
         if k in s:
             print(filenames[s[k]], filenames[mapIndex])
             print("duplicate")
@@ -185,9 +205,10 @@ def dedup(filenames: List[str], maps: List[List[List[int]]]):
     return good
 
 
-def hard(regular_map: List[List[int]]):
+def calculate_hard(regular_map: List[List[int]]) -> float:
     """
     评价一个局面的难易程度
+    :return: 返回一个浮点数表示难易程度
     """
     regular_map = np.array(regular_map)
     cnt = Counter(np.reshape(regular_map, -1))
@@ -227,7 +248,13 @@ def eight_op(opList: str):
 
 
 def try_op(a: List[List[int]], opList: str):
-    # 对oplist执行8种变换，判断是否能够解决问题，如果可以，返回opList，否则，返回空
+    """
+    正则化的时候需要考虑答案一起正则化
+     对oplist执行8种变换，判断是否能够解决问题，如果可以，返回opList，否则，返回空
+    :param a:
+    :param opList:
+    :return:
+    """
     for eight in eight_op(opList):
         if check_right(a, eight):
             return eight
@@ -250,14 +277,11 @@ def check_right(a: List[List[int]], opList: str):
         a[x, y] += obj
 
     for op in opList:
-        if op not in "udlr": raise Exception(f"cannot find ^{op}$")
+        if op not in "udlr": raise Exception(f"cannot find operation with name:^{op}$")
         dx, dy = ((-1, 0), (1, 0), (0, -1), (0, 1))["udlr".index(op)]
         man = get_man_pos(a)
         neibor = (man[0] + dx, man[1] + dy)
         target = (neibor[0] + dx, neibor[1] + dy)
-        # print('操作',op)
-        # print(tos(a))
-        # input()
         if not legal(neibor[0], neibor[1]):
             return False
         if a[neibor[0], neibor[1]] in (SPACE, SLOT):
@@ -291,8 +315,5 @@ def argsort_by_hard(maps: List[List[List[int]]]):
     """
     hard_list = []
     for a in maps:
-        hard_list.append(hard(a))
-    hard_list = np.array(hard_list)
-    hard_list = hard_list[:, 0] * 1000 + hard_list[:, 1] * 100 + hard_list[:, 2]
-    inds = np.argsort(hard_list)
-    return inds
+        hard_list.append(calculate_hard(a))
+    return np.argsort(hard_list)
