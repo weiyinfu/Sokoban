@@ -3,8 +3,8 @@ from functools import lru_cache
 from fu import json
 from fu import sqlite_util as d
 from tqdm import tqdm
-
-from sokoban import format, lib
+from fu import cache
+from sokoban import lib
 import os
 
 db_path = os.path.join(os.path.dirname(__file__), '../sokoban.db')
@@ -39,7 +39,7 @@ def insert(q: Question):
     return d.insert_one(conn, 'question', q, ['id', 'question', 'answer', 'hard', 'hash', 'solve_times'])
 
 
-@lru_cache()
+@cache.simple_cache()
 def get_all(sql="select * from question") -> List[Question]:
     """
     获取全部数据
@@ -59,7 +59,7 @@ def get_one_by_id(question_id: str) -> Question:
 
 
 def get_list(sql, args: Iterable) -> List[Question]:
-    li = d.select_obj(sql, args)
+    li = d.select_obj(conn, sql, args)
     return li
 
 
@@ -85,10 +85,10 @@ def update_map():
     """
     a: List[Question] = d.select_obj(conn, "select id,question,answer from question")
     for q in tqdm(a, desc="update_map"):
-        ma = format.from_psb_string(q.question)
+        ma = lib.from_psb_string(q.question)
         answer = lib.regularize_operation(q.answer) if q.answer else q.answer
         reg_ma = lib.regularize(ma, True)
-        psb_string = format.to_psb_string(reg_ma)
+        psb_string = lib.to_psb_string(reg_ma)
         if psb_string != q.question or answer != q.answer:
             print("need format")
             if psb_string != q.question and answer:
@@ -107,7 +107,7 @@ def update_hard():
     """
     a: List[Question] = d.select_obj(conn, "select id,question from question")
     for q in tqdm(a, desc='update_hard'):
-        ma = format.from_psb_string(q.question)
+        ma = lib.from_psb_string(q.question)
         hard = lib.hard(ma)
         conn.execute("update question set hard=? where id=?", (hard, q.id))
     conn.commit()
@@ -120,7 +120,7 @@ def validate_data():
     """
     a: List[Question] = d.select_obj(conn, "select id,question,answer from question")
     for q in a:
-        ma = format.from_psb_string(q.question)
+        ma = lib.from_psb_string(q.question)
         try:
             lib.validate(ma)
         except Exception as e:

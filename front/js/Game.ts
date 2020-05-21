@@ -62,9 +62,10 @@ class History {
   }
 }
 
-export class Sokoban {
+export class Game {
   curMap: number[][] = [];
   history: History;
+  question: string = "";
 
   constructor() {
     this.history = new History();
@@ -91,6 +92,7 @@ export class Sokoban {
   loadPsb(psbString: string) {
     this.history.clear();
     this.curMap = loadPsbString(psbString);
+    this.question = psbString;
   }
 
   isOver() {
@@ -100,6 +102,15 @@ export class Sokoban {
   getOpList() {
     return this.history.tos();
   }
+
+  getSize() {
+    //获取地图的宽度和高度
+    return {
+      rows: this.curMap.length,
+      cols: this.curMap.reduce((o, n) => o = Math.max(o, n.length), 0)
+    }
+  }
+
 
   move(direction: string): boolean {
     //返回是否移动成功
@@ -134,5 +145,4 @@ export class Sokoban {
       return false;
     }
   }
-
 }

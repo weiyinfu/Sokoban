@@ -54,3 +54,11 @@ export function getMan(curMap: SokobanMap) {
 export function isOneOf<T>(v: T, ...options: T[]) {
   return options.indexOf(v) !== -1;
 }
+
+export function wrapUrl(url: string) {
+  const appName = "/Sokoban/"
+  if (url.startsWith("/api/") && location.pathname.startsWith(appName)) {
+    url = `${appName}${url.slice(1)}`
+  }
+  return url;
+}

@@ -1,11 +1,8 @@
-from typing import List, Dict
-import os
-import copy
-import numpy as np
-import json
 import re
 from collections import Counter
-from sokoban.format import to_psb_string
+from typing import List, Dict
+
+import numpy as np
 
 """
 标准的地图应该是一个二维llint列表，llint
@@ -13,6 +10,49 @@ from sokoban.format import to_psb_string
 
 images = ["space", 'slot', "man", "manSlot", 'box', 'boxSlot', "wall"]
 SPACE, SLOT, MAN, MAN_SLOT, BOX, BOX_SLOT, WALL = list(range(len(images)))
+
+
+def to_psb_string(a: List[List[int]], ground='-'):
+    """
+    把一个地图转化为psb格式
+    因为ground有争议，此处使用-
+    """
+    chars = [ground] + list(".@+$*#")
+    ids = [i for i in range(len(chars))]
+    a = transform(a, dict(zip(ids, chars)))
+    return '\n'.join(''.join(map(str, row)) for row in a)
+
+
+def from_psb_string(a: str):
+    lines = a.strip().splitlines()
+    valid_lines = []
+    meet_end = False
+    for line in lines:
+        is_line = re.match("^[.@+$*#_\\-]", line)
+        if is_line:
+            if meet_end:
+                print(a)
+                raise Exception("已经解析完毕了又遇到了新行")
+            else:
+                valid_lines.append(line)
+        else:
+            meet_end = True
+    valid_lines = [list(line.replace('_', '-').strip()) for line in valid_lines if line.strip()]
+    chars = list("-.@+$*#")
+    return transform(valid_lines, dict(zip(chars, range(len(chars)))))
+
+
+def transform(a: List[List[str]], ma: Dict[str, str]):
+    """
+    a是一个llint格式的地图，把它用ma进行映射
+    """
+    b = []
+    for row in a:
+        line = []
+        for col, v in enumerate(row):
+            line.append(ma[v])
+        b.append(line)
+    return b
 
 
 def regularize(ma: List[List[int]], do_strip=False):
