@@ -18,6 +18,7 @@
 <script>
   import {Game} from "../js/Game.ts";
   import CanvasSokoban from "../component/CanvasSokoban";
+  import {wrapUrl} from "../js/lib";
 
   const axios = require("axios");
   const GameMixin = require("../js/GameMixin.js");
@@ -98,7 +99,7 @@
         this.$nextTick(() => {
           this.$message("恭喜胜利！")
         })
-        axios.post('/api/submit', qa).then(resp => {
+        axios.post(wrapUrl('/api/submit'), qa).then(resp => {
           console.log(resp.data)
           this.$message(resp.data);
           if (qa.a.length < this.answer.length) {
