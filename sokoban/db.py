@@ -65,7 +65,7 @@ def get_list(sql, args: Iterable) -> List[Question]:
 
 
 def get_one(sql, args: Iterable = tuple()) -> Question:
-    return d.select_list(conn, sql, args)
+    return d.select_list(conn, sql, args)[0]
 
 
 def dump(filepath: str):

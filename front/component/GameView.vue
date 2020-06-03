@@ -102,7 +102,7 @@
         axios.post(wrapUrl('/api/submit'), qa).then(resp => {
           console.log(resp.data)
           this.$message(resp.data);
-          if (qa.a.length < this.answer.length) {
+          if (!this.answer || qa.a.length < this.answer.length) {
             this.$store.commit("setAnswer", {
               level: this.curLevel,
               qa: qa,
