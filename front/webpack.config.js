@@ -86,11 +86,11 @@ const webpackConfig = {
   devServer: {
     contentBase: distPath,
     proxy: {
-      "/api": "http://localhost:5000",
-      "/res": "http://localhost:5000",
+      "/api": "http://localhost:5001",
+      "/res": "http://localhost:5001",
     },
     host: "0.0.0.0",
-    port: 8080,
+    port: 8081,
     hot: true,
     disableHostCheck: true,
     historyApiFallback: {

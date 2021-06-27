@@ -4,9 +4,10 @@
 为什么后台服务是必需的？最开始的想法是“如果有高手解决了一个问题，需要把这个问题的答案记录下来”。这个操作必定需要后端。
 """
 
+import gzip
 from os.path import *
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Response
 from fu import cache
 from fu import json
 from fu import snow_flake
@@ -21,7 +22,12 @@ snow = snow_flake.SnowFlake()
 
 @app.route("/api/get_maps")
 def get_maps():
-    return jsonify(db.get_all("select * from question order by id"))
+    content = json.dumps(db.get_all("select * from question order by id"))
+    content = gzip.compress(bytes(content, encoding='utf8'))
+    return Response(content, headers={
+        "Content-Type": "application/json;charset=UTF-8",
+        "Content-Encoding": "gzip"
+    })
 
 
 @app.route("/api/submit", methods=['POST'])
@@ -87,4 +93,4 @@ def add_question():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=5001)

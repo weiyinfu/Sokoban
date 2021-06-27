@@ -1,6 +1,6 @@
 import re
 from collections import Counter
-from typing import List, Dict
+from typing import List, Dict, Any, Union
 
 import numpy as np
 
@@ -12,7 +12,7 @@ images = ["space", 'slot', "man", "manSlot", 'box', 'boxSlot', "wall"]
 SPACE, SLOT, MAN, MAN_SLOT, BOX, BOX_SLOT, WALL = list(range(len(images)))
 
 
-def to_xsb_string(a: List[List[int]], ground='-'):
+def to_xsb_string(a: Union[List[List[int]], np.ndarray], ground='-'):
     """
     把一个地图转化为xsb格式
     因为ground有争议，此处使用-
@@ -42,7 +42,7 @@ def from_xsb_string(a: str):
     return transform(valid_lines, dict(zip(chars, range(len(chars)))))
 
 
-def transform(a: List[List[str]], ma: Dict[str, str]):
+def transform(a: List[List[Any]], ma: Dict[Any, str]):
     """
     a是一个llint格式的地图，把它用ma进行映射
     """
@@ -75,7 +75,7 @@ def regularize_xsb_string(s: str):
     return to_xsb_string(ma)
 
 
-def regularize(ma: List[List[int]]):
+def regularize(ma: List[List[Any]]):
     """
     规范化一个地图
     计算一个地图的哈希值，将一个地图顺时针旋转4次，flip之后再旋转4次，一共得到8种局面，取这8种局面中的最小局面作为局面的正则化值
@@ -109,7 +109,7 @@ def get_man_pos(ma: List[List[int]]):
     assert False, "cannot find man"
 
 
-def show(a: List[List[int]]):
+def show(a: List[List[Any]]):
     """
     打印一个地图
     """

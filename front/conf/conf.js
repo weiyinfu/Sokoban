@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.TemplateList = exports.Template = exports.ExternalCssList = exports.ExternalCss = exports.ExternalJsList = exports.ExternalJs = void 0;
 /**
  * 为了减小打包之后的代码体积，我们会把一些库拆分出来，使用CDN的方式加载这些库
  * 外部库包括两类：Js和css。

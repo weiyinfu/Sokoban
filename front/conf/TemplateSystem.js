@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.generatePages = void 0;
 const conf_1 = require("./conf");
 const WebpackConfigFilter_1 = __importDefault(require("./WebpackConfigFilter"));
 const handlebars = require("handlebars");

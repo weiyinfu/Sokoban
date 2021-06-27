@@ -1,7 +1,6 @@
 import os
 from typing import List, Iterable
 
-from fu import cache
 from fu import json
 from fu import sqlite_util as d
 from tqdm import tqdm
@@ -51,7 +50,6 @@ def insert(q: Question):
                         ['id', 'question', 'answer', 'hard', 'hash', 'solve_times', 'extra'])
 
 
-@cache.simple_cache()
 def get_all(sql="select * from question") -> List[Question]:
     """
     获取全部数据
