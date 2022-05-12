@@ -1,0 +1,56 @@
+{
+  "skins": [
+    {
+      "name": "skin1",
+      "images": {
+        "left": "skin/skin1/left.png",
+        "down": "skin/skin1/down.png",
+        "wall": "skin/skin1/wall.png",
+        "up": "skin/skin1/up.png",
+        "space": "skin/skin1/space.png",
+        "boxSlot": "skin/skin1/boxSlot.png",
+        "box": "skin/skin1/box.png",
+        "slot": "skin/skin1/slot.png",
+        "right": "skin/skin1/right.png"
+      }
+    },
+    {
+      "name": "skin3",
+      "images": {
+        "wall": "skin/skin3/wall.png",
+        "space": "skin/skin3/space.gif",
+        "boxSlot": "skin/skin3/boxSlot.png",
+        "box": "skin/skin3/box.png",
+        "slot": "skin/skin3/slot.png",
+        "man": "skin/skin3/man.png",
+        "up": "skin/skin3/man.png",
+        "down": "skin/skin3/man.png",
+        "left": "skin/skin3/man.png",
+        "right": "skin/skin3/man.png"
+      }
+    },
+    {
+      "name": "skin2",
+      "images": {
+        "boxSlot": "skin/skin2/boxSlot.gif",
+        "left": "skin/skin2/left.gif",
+        "box": "skin/skin2/box.gif",
+        "right": "skin/skin2/right.gif",
+        "up": "skin/skin2/up.gif",
+        "slot": "skin/skin2/slot.gif",
+        "down": "skin/skin2/down.gif",
+        "space": "skin/skin2/space.gif",
+        "wall": "skin/skin2/wall.gif"
+      }
+    }
+  ],
+  "images": [
+    "space",
+    "slot",
+    "man",
+    "manSlot",
+    "box",
+    "boxSlot",
+    "wall"
+  ]
+}

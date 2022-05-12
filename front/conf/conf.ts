@@ -12,16 +12,16 @@ export const ExternalJsList: ExternalJs[] = [
   {
     name: "vue",
     outterName: "Vue",
-    url: "https://cdn.bootcss.com/vue/2.6.6/vue.min.js",
+    url: "https://cdn.bootcdn.net/ajax/libs//vue/2.6.6/vue.min.js",
   }, {
     name: "element-ui",
     outterName: "ELEMENT",
-    url: "https://cdn.bootcss.com/element-ui/2.4.11/index.js",
+    url: "https://cdn.bootcdn.net/ajax/libs//element-ui/2.4.11/index.js",
   },
   {
     name: "vue-router",
     outterName: "VueRouter",
-    url: "https://cdn.bootcss.com/vue-router/3.0.2/vue-router.min.js",
+    url: "https://cdn.bootcdn.net/ajax/libs//vue-router/3.0.2/vue-router.min.js",
   }
 ]
 
@@ -35,12 +35,12 @@ export const ExternalCssList: ExternalCss[] = [
   {
     name: "font-awesome",
     local: "font-awesome/css/font-awesome.min.css",
-    url: "https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    url: "https://cdn.bootcdn.net/ajax/libs//font-awesome/4.7.0/css/font-awesome.min.css"
   },
   {
     name: "element-ui",
     local: "element-ui/lib/theme-chalk/index.css",
-    url: "https://cdn.bootcss.com/element-ui/2.5.4/theme-chalk/index.css"
+    url: "https://cdn.bootcdn.net/ajax/libs//element-ui/2.5.4/theme-chalk/index.css"
   },
 ]
 

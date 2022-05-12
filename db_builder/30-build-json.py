@@ -22,5 +22,6 @@ for i in maps:
     id = snow.get_id()
     a.append(db.Question(id=id, question=q, answer=an, hard=0, hash="", solve_times=0, extra=""))
 assert len(ans) == 0, 'ans中还有新问题'
+db.init()
 for i in a:
     db.insert(i)

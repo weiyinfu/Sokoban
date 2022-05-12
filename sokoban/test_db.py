@@ -1,8 +1,9 @@
+from os.path import *
+from typing import List
 from unittest import TestCase
+
 from sokoban import db
 from sokoban import lib
-from os.path import *
-import os
 from sokoban.db import Question
 
 

@@ -15,7 +15,7 @@ from fu import snow_flake
 from sokoban import db, lib
 
 cur = abspath(dirname(__file__))
-app = Flask(__name__, static_url_path="/", static_folder=join(cur, '../front/dist'))
+app = Flask(__name__, static_url_path="/", static_folder=join(cur, '../front2/dist'))
 # snow用于生成新的ID
 snow = snow_flake.SnowFlake()
 
