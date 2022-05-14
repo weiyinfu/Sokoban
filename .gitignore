@@ -2,3 +2,13 @@
 .idea/
 __pycache__
 sokoban.db
+
+node_modules/
+__pycache__/
+.pynb_checkpoints
+.vscode/
+*.lock
+.pytest_cach
+package-lock.json
+yarn.lock
+.DS_Store
