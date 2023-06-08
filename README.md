@@ -139,3 +139,7 @@ http://sokoban.cn/tutorial/reverse/reverse_mode.php
 * 如何生成难度较大的推箱子关卡
 * TODO:添加地图编辑器
 * 添加问题、求解问题
+
+# 相关资料
+* 黄高乐：推箱子关卡自动生成，https://github.com/huanggaole/AutoGenerateSokobanLevel
+
